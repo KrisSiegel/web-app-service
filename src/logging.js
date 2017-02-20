@@ -6,6 +6,7 @@
 "use strict";
 const msngr = require("msngr");
 
+// Various, available console foreground colors
 const COLOR = Object.freeze({
     DEFAULT: "\x1b[0m",
     BLACK: "\x1b[30m",
@@ -18,15 +19,25 @@ const COLOR = Object.freeze({
     WHITE: "\x1b[37m"
 });
 
+// Converts incoming logging levels to a specified color
 const LEVEL_TO_COLOR = Object.freeze({
     error: COLOR.RED,
     info: COLOR.WHITE,
     warn: COLOR.YELLOW,
-    warning: COLOR.YELLOW,
-    alert: COLOR.GREEN
+    alert: COLOR.GREEN,
+    trace: COLOR.WHITE
 });
 
+let config;
+// If no config has been defined let all logging through
+// Once config is specified, follow its rules explicitly
 msngr("log").on((text, message) => {
-    let color = LEVEL_TO_COLOR[message.category] || COLOR.DEFAULT;
-    console.log(`${color}${text}${COLOR.DEFAULT}`);
+    if (!config) {
+        config = msngr.config.getDeep("service", "logging");
+    }
+
+    if (!config || config[message.category]) {
+        let color = LEVEL_TO_COLOR[message.category] || COLOR.DEFAULT;
+        console.log(`${color}${text}${COLOR.DEFAULT}`);
+    }
 });

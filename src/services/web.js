@@ -14,9 +14,23 @@ const path = require("path");
 module.exports = () => {
     const app = express();
     const server = http.createServer(app);
+    const request = require("../common").request(app);
 
     // Remove x-powered-by express header because it's dumb
     app.disable('x-powered-by');
+
+    // Massage the incoming request / extract data for easy access
+    app.use((req, res, next) => {
+        // Extract Authorization token; support formats "Bearer <token>" or just "<token>"
+        const split = (req.header("authorization") || "").trim().split(" ");
+        if (split[1] && split[1].length > 0) {
+            req.token = split[1];
+        } else if (split[0] && split[0].length > 0) {
+            req.token = split[0];
+        }
+
+        return next();
+    });
 
     // Iterate through the routes to set them up.
     const routesPath = path.join(__dirname, "..", "routes");
@@ -26,9 +40,9 @@ module.exports = () => {
             if (routes[i].indexOf(".js") !== -1 && routes[i].indexOf(".spec.js") === -1) {
                 var route = path.join(routesPath, routes[i]);
                 try {
-                    require(route)(app);
+                    require(route)(request);
                 } catch (ex) {
-                    msngr("log", "error").emit(`Unable to load the routes in ${route}!`);
+                    msngr("log", "error").emit(`Unable to load the routes in ${route} because\n${ex}`);
                 }
             }
         }
