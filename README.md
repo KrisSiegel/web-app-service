@@ -10,7 +10,7 @@ This is a node.js project that can support being a micro service, a static web s
 - Running `npm start` will execute the server with the default environment which is either specified in environment variables as `environment` or it defaults to `development`
 - Running `npm start <environment>` will start with the specified environment
 - Configuration similar to rails where `./configuration/default.js` contains the default and is mixed in with whatever environmental file that is specified. So `npm start development` will mix `./configuration/default.js` with `./configuration/environments/development.js`. The environment file *always* wins.
-- When an authorization token is specified in a request it is automatically put into `req.token` for easy grabbing. Support both commont formats of `Authorization: Bearer <token>` and `Authorization: <token>`
+- When an authorization token is specified in a request it is automatically put into `req.token` for easy grabbing. Supports both common formats `Authorization: Bearer <token>` and `Authorization: <token>`
 - Uses Msngr.js for messaging between components; setup by default for color coded logging. `msngr("log", "alert").emit("Oh joy!");`
 - Logging is also configurable; enable `trace` to see what route(s) are registered and when each get called
 - The `./common/security.js` library contains industry standard hashing, hash comparison and randomized token generation
