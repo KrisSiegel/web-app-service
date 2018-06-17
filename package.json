@@ -4,6 +4,9 @@
   "description": "This is a generic web application's service made in node.js designed to be forked and used in any web related project.",
   "main": "main.js",
   "private": true,
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "scripts": {
     "start": "node ./src/main.js",
     "test": "node ./scripts/test.js"

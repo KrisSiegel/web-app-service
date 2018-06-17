@@ -33,16 +33,6 @@ if (cluster.isMaster) {
         }
     });
 } else if (cluster.isWorker) {
-    // Autoreload for development purposes; not advisable to use in a production deployment!
-    if (config.development.autoreload) {
-        const fs = require("fs");
-        fs.watch("./src", { encoding: "utf8", recursive: true }, () => {
-            console.warn(`Reloading worker ${process.env.worker} due to new code changes!`, () => {
-                process.exit();
-            });
-        });
-    }
-
     // Require the web server to start it up!
     require("./servers/web")();
 }
