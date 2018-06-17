@@ -6,7 +6,6 @@
 "use strict";
 
 const express = require("express");
-const msngr = require("msngr");
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -14,7 +13,8 @@ const path = require("path");
 module.exports = () => {
     const app = express();
     const server = http.createServer(app);
-    const request = require("../common").request(app);
+    const request = require("../common/request")(app);
+    const config = require("../config");
 
     // Remove x-powered-by express header because it's dumb
     app.disable('x-powered-by');
@@ -29,28 +29,28 @@ module.exports = () => {
             req.token = split[0];
         }
 
-        return next();
+        return next(req, res);
     });
 
     // Iterate through the routes to set them up.
     const routesPath = path.join(__dirname, "..", "routes");
     const routes = fs.readdirSync(routesPath);
-    if (msngr.is(routes).there && routes.length > 0) {
+    if (routes && routes.length > 0) {
         for (let i = 0; i < routes.length; ++i) {
             if (routes[i].indexOf(".js") !== -1 && routes[i].indexOf(".spec.js") === -1) {
                 var route = path.join(routesPath, routes[i]);
                 try {
                     require(route)(request);
                 } catch (ex) {
-                    msngr("log", "error").emit(`Unable to load the routes in ${route} because\n${ex}`);
+                    console.error(`Unable to load the routes in ${route}`, ex);
                 }
             }
         }
     }
 
     // Finally, time to tell the server to listen to the given port. Cross your fingers!
-    server.listen(msngr.config.getDeep("service", "server.port"), () => {
-        msngr("log", "alert").emit(`Worker ${process.env.worker} listening on port ${msngr.config.getDeep("service", "server.port")}`);
+    server.listen(config.server.port, config.server.host, () => {
+        console.log(`Worker ${process.env.worker} listening at ${server.address().address}:${server.address().port}`);
     });
 
     return server;

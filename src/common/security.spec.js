@@ -9,52 +9,42 @@ const expect = require("chai").expect;
 const security = require("./security");
 
 describe("./common/security.js", () => {
-    it("security.hash(input, callback) exists", () => {
+    it("security.hash(input) exists", () => {
         expect(security.hash).to.exist;
     });
 
-    it("security.hash(input, callback) generates hashes as expected", (done) => {
-        security.hash("myPassWord", (hash1) => {
-            expect(hash1).to.exist;
-            expect(hash1).to.not.equal("myPassWord");
+    it("security.hash(input) generates hashes as expected", async () => {
+        const hash1 = await security.hash("myPassWord");
+        expect(hash1).to.exist;
+        expect(hash1).to.not.equal("myPassWord");
 
-            security.hash("myPassword", (hash2) => {
-                expect(hash2).to.exist;
-                expect(hash2).to.not.equal("myPassword");
+        const hash2 = await security.hash("myPassword");
+        expect(hash2).to.exist;
+        expect(hash2).to.not.equal("myPassword");
 
-                security.hash("myPassWord", (hash3) => {
-                    expect(hash3).to.exist;
-                    expect(hash3).to.not.equal("myPassWord");
-                    done();
-                });
-            });
-        });
+        const hash3 = await security.hash("myPassWord");
+        expect(hash3).to.exist;
+        expect(hash3).to.not.equal("myPassWord");
     });
 
-    it("security.compare(input, hash, callback) compares hashes as expected", (done) => {
-        security.hash("myPassWord", (hash1) => {
-            expect(hash1).to.exist;
-            expect(hash1).to.not.equal("myPassWord");
+    it("security.compare(input, hash) compares hashes as expected", async () => {
+        const hash1 = await security.hash("myPassWord");
+        expect(hash1).to.exist;
+        expect(hash1).to.not.equal("myPassWord");
 
-            security.hash("myPassword", (hash2) => {
-                expect(hash2).to.exist;
-                expect(hash2).to.not.equal("myPassword");
+        const hash2 = await security.hash("myPassword");
+        expect(hash2).to.exist;
+        expect(hash2).to.not.equal("myPassword");
 
-                security.hash("myPassWord", (hash3) => {
-                    expect(hash3).to.exist;
-                    expect(hash3).to.not.equal("myPassWord");
+        const hash3 = await security.hash("myPassWord");
+        expect(hash3).to.exist;
+        expect(hash3).to.not.equal("myPassWord");
 
-                    security.compare("myPassWord", hash1, (response1) => {
-                        expect(response1).to.equal(true);
+        const response1 = await security.compare("myPassWord", hash1);
+        expect(response1).to.equal(true);
 
-                        security.compare("myPassWord", hash2, (response2) => {
-                            expect(response2).to.equal(false);
-                            done();
-                        });
-                    });
-                });
-            });
-        });
+        const response2 = await security.compare("myPassWord", hash2);
+        expect(response2).to.equal(false);
     });
 
     it("security.generateToken() returns a random token", () => {
