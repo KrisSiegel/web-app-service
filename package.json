@@ -1,9 +1,12 @@
 {
   "name": "web-app-service",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "This is a generic web application's service made in node.js designed to be forked and used in any web related project.",
   "main": "main.js",
   "private": true,
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "scripts": {
     "start": "node ./src/main.js",
     "test": "node ./scripts/test.js"
@@ -19,13 +22,13 @@
   },
   "homepage": "https://github.com/KrisSiegel/web-app-service#readme",
   "dependencies": {
-    "bcrypt": "^1.0.2",
-    "express": "^4.14.1",
-    "msngr": "^5.1.0"
+    "bcrypt": "^2.0.1",
+    "express": "^4.16.3",
+    "msngr": "^6.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
     "superagent": "^3.4.4"
   }
 }
